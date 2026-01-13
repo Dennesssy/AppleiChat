@@ -1,0 +1,160 @@
+# Agent CLI Configuration for AppleiChat
+# Configuration for using Apple Intelligence FoundationModels in agent workflows
+
+# Model Configuration
+model:
+  # Available models: general, contentTagging
+  # NOTE: Review needed to determine compatibility with tool calling features
+  default: general
+  use_case: general  # or contentTagging for content categorization tasks
+
+  # Model capabilities (from Apple TN3193)
+  capabilities:
+    - text_generation
+    - streaming_response
+    - context_management
+    - on_device_processing
+    # NOTE: Tool calling capability requires validation - not documented in TN3193
+
+# Generation Parameters
+generation:
+  temperature: 0.7          # 0.0-1.0, controls randomness
+  max_context_window: ~15   # Approximate message count before context window warning
+  streaming: true           # Enable streaming responses
+  prewarm: true            # Prewarm model on initialization for lower latency
+
+# System Instructions
+system:
+  instructions: |
+    You are a helpful AI assistant. Provide clear, concise answers.
+    Keep responses under 3 paragraphs unless specifically asked for more detail.
+    Be accurate and acknowledge uncertainty when appropriate.
+
+  # Best practices from TN3193
+  instructions_guidelines:
+    - Keep instructions concise (1-3 paragraphs max)
+    - Use clear, imperative language
+    - Avoid overly complex or lengthy instructions
+
+# Session Management
+session:
+  persist_context: true          # Save conversation history
+  context_compression: true      # Enable automatic context compression on overflow
+  context_retention: 6           # Number of recent exchanges to keep when compressing
+  max_messages: 20               # Maximum messages to load from persistent storage
+
+# Performance Optimizations
+performance:
+  prewarm_on_init: true         # Reduce first-query latency
+  stream_responses: true         # Enable real-time response streaming
+  lazy_loading: false            # Load model immediately (not lazy)
+
+# Error Handling
+errors:
+  auto_recover: true             # Automatically create new session on context overflow
+  provide_feedback: false        # Enable feedback logging (for future Apple feedback)
+  graceful_degradation: true     # Show helpful messages when model unavailable
+
+# Availability Checks
+availability:
+  check_on_init: true
+  error_messages:
+    deviceNotEligible: "This device doesn't support Apple Intelligence. AI features require a compatible device."
+    appleIntelligenceNotEnabled: "Please enable Apple Intelligence in Settings > Apple Intelligence & Siri to use AI features."
+    modelNotReady: "The AI model is downloading or not ready. Please try again shortly."
+    unavailable: "The AI model is currently unavailable. Please check your settings and try again."
+
+# CLI-Specific Settings
+cli:
+  interactive_mode: false        # Default to single-query mode
+  color_output: true             # Enable ANSI color codes
+  verbose: false                 # Minimal output by default
+  prompt_prefix: "> "            # Interactive mode prompt
+
+# Agent Integration Notes
+agent_notes: |
+  IMPORTANT COMPATIBILITY REVIEW NEEDED:
+
+  1. Tool Calling Features:
+     - Apple's FoundationModels framework (TN3193) does not explicitly document
+       tool calling or function calling capabilities as of macOS 15.1
+     - The framework focuses on:
+       * Text generation and streaming
+       * Context management (Transcript API)
+       * On-device processing
+       * Generation options (temperature only)
+     - Before using this in agent workflows requiring tool calling, verify:
+       * Whether FoundationModels supports structured outputs
+       * Whether function/tool calling is available in the API
+       * Alternative approaches if tool calling is not supported
+
+  2. Current Capabilities (Verified):
+     - Streaming text generation: YES
+     - Context window management: YES
+     - System instructions: YES
+     - Temperature control: YES
+     - Session persistence: YES (via Transcript API)
+     - On-device privacy: YES
+
+  3. Potential Limitations:
+     - No documented support for:
+       * JSON mode / structured outputs
+       * Function/tool calling
+       * Multiple model selection beyond use cases
+       * Vision/multimodal inputs (text only)
+       * Custom model parameters beyond temperature
+     - Context window size is not explicitly documented
+     - Token limits are managed via message count heuristics
+
+  4. Recommended Use Cases:
+     - Personal assistant chat applications
+     - Content tagging and categorization
+     - On-device text generation with privacy requirements
+     - Simple Q&A systems without complex tool integration
+
+  5. NOT Recommended For (Until Verified):
+     - Agent systems requiring tool/function calling
+     - Complex multi-step workflows with external tools
+     - Systems requiring guaranteed structured outputs
+     - Applications needing precise token control
+
+# Web Integration (if WebFetcher is available)
+web_integration:
+  enabled: false                 # Requires WebFetcher.swift
+  max_content_length: 2000       # Truncate web content to avoid context overflow
+  timeout: 10                    # Seconds
+  wait_time: 1.0                # Seconds to wait for page load
+
+# Feedback System (Future)
+feedback:
+  enabled: false                 # Not implemented in CLI version
+  log_attachments: false
+  sentiments:
+    - positive
+    - negative
+    - neutral
+
+# Privacy & Security
+privacy:
+  on_device_only: true          # FoundationModels is always on-device
+  no_telemetry: true            # Apple Intelligence doesn't send data to servers
+  local_storage: true           # Conversations stored locally only
+
+# Development Settings
+development:
+  debug_mode: false
+  log_transcript: false         # Log full transcript for debugging
+  verbose_errors: true          # Detailed error messages
+
+# Version Info
+meta:
+  config_version: "1.0.0"
+  framework: "FoundationModels"
+  min_macos_version: "15.1"
+  min_ios_version: "18.1"
+  last_updated: "2026-01-12"
+  compatibility_status: "REVIEW_NEEDED"
+  review_notes: |
+    This configuration is based on Apple TN3193 and the working ChatManager
+    implementation. Tool calling capabilities require additional research and
+    validation before use in production agent workflows.

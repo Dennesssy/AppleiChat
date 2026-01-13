@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(killall:*)",
+      "Bash(defaults find AppleIntelligence)",
+      "Bash(plutil:*)",
+      "Bash(ls:*)",
+      "Bash(git add:*)"
+    ]
+  }
+}

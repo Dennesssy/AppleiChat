@@ -6,7 +6,20 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		31132E9E2F15708900418E21 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31132E9D2F15708900418E21 /* Cocoa.framework */; };
+		31132EA02F15708900418E21 /* XcodeKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31132E9F2F15708900418E21 /* XcodeKit.framework */; };
+		31132EA92F15708900418E21 /* AppleiCode.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 31132E9B2F15708800418E21 /* AppleiCode.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
+		31132EA72F15708900418E21 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 31E5594B2F1503C800757A8D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 31132E9A2F15708800418E21;
+			remoteInfo = AppleiCode;
+		};
 		31E559612F1503CA00757A8D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 31E5594B2F1503C800757A8D /* Project object */;
@@ -23,13 +36,48 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		31132EAA2F15708900418E21 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				31132EA92F15708900418E21 /* AppleiCode.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		31132E9B2F15708800418E21 /* AppleiCode.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = AppleiCode.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		31132E9D2F15708900418E21 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		31132E9F2F15708900418E21 /* XcodeKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XcodeKit.framework; path = Library/Frameworks/XcodeKit.framework; sourceTree = DEVELOPER_DIR; };
 		31E559532F1503C800757A8D /* AppleiChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppleiChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		31E559602F1503CA00757A8D /* AppleiChatTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppleiChatTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		31E5596A2F1503CA00757A8D /* AppleiChatUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppleiChatUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		31132EAD2F15708900418E21 /* Exceptions for "AppleiCode" folder in "AppleiCode" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 31132E9A2F15708800418E21 /* AppleiCode */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		31132EA12F15708900418E21 /* AppleiCode */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				31132EAD2F15708900418E21 /* Exceptions for "AppleiCode" folder in "AppleiCode" target */,
+			);
+			path = AppleiCode;
+			sourceTree = "<group>";
+		};
 		31E559552F1503C800757A8D /* AppleiChat */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = AppleiChat;
@@ -48,6 +96,15 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		31132E982F15708800418E21 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				31132E9E2F15708900418E21 /* Cocoa.framework in Frameworks */,
+				31132EA02F15708900418E21 /* XcodeKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		31E559502F1503C800757A8D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -72,12 +129,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		31132E9C2F15708900418E21 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				31132E9D2F15708900418E21 /* Cocoa.framework */,
+				31132E9F2F15708900418E21 /* XcodeKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		31E5594A2F1503C800757A8D = {
 			isa = PBXGroup;
 			children = (
 				31E559552F1503C800757A8D /* AppleiChat */,
 				31E559632F1503CA00757A8D /* AppleiChatTests */,
 				31E5596D2F1503CA00757A8D /* AppleiChatUITests */,
+				31132EA12F15708900418E21 /* AppleiCode */,
+				31132E9C2F15708900418E21 /* Frameworks */,
 				31E559542F1503C800757A8D /* Products */,
 			);
 			sourceTree = "<group>";
@@ -88,6 +156,7 @@
 				31E559532F1503C800757A8D /* AppleiChat.app */,
 				31E559602F1503CA00757A8D /* AppleiChatTests.xctest */,
 				31E5596A2F1503CA00757A8D /* AppleiChatUITests.xctest */,
+				31132E9B2F15708800418E21 /* AppleiCode.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -95,6 +164,28 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		31132E9A2F15708800418E21 /* AppleiCode */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 31132EAE2F15708900418E21 /* Build configuration list for PBXNativeTarget "AppleiCode" */;
+			buildPhases = (
+				31132E972F15708800418E21 /* Sources */,
+				31132E982F15708800418E21 /* Frameworks */,
+				31132E992F15708800418E21 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				31132EA12F15708900418E21 /* AppleiCode */,
+			);
+			name = AppleiCode;
+			packageProductDependencies = (
+			);
+			productName = AppleiCode;
+			productReference = 31132E9B2F15708800418E21 /* AppleiCode.appex */;
+			productType = "com.apple.product-type.xcode-extension";
+		};
 		31E559522F1503C800757A8D /* AppleiChat */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 31E559742F1503CA00757A8D /* Build configuration list for PBXNativeTarget "AppleiChat" */;
@@ -102,10 +193,12 @@
 				31E5594F2F1503C800757A8D /* Sources */,
 				31E559502F1503C800757A8D /* Frameworks */,
 				31E559512F1503C800757A8D /* Resources */,
+				31132EAA2F15708900418E21 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				31132EA82F15708900418E21 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				31E559552F1503C800757A8D /* AppleiChat */,
@@ -173,6 +266,9 @@
 				LastSwiftUpdateCheck = 2620;
 				LastUpgradeCheck = 2620;
 				TargetAttributes = {
+					31132E9A2F15708800418E21 = {
+						CreatedOnToolsVersion = 26.2;
+					};
 					31E559522F1503C800757A8D = {
 						CreatedOnToolsVersion = 26.2;
 					};
@@ -203,11 +299,19 @@
 				31E559522F1503C800757A8D /* AppleiChat */,
 				31E5595F2F1503CA00757A8D /* AppleiChatTests */,
 				31E559692F1503CA00757A8D /* AppleiChatUITests */,
+				31132E9A2F15708800418E21 /* AppleiCode */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		31132E992F15708800418E21 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		31E559512F1503C800757A8D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -232,6 +336,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		31132E972F15708800418E21 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		31E5594F2F1503C800757A8D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -256,6 +367,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		31132EA82F15708900418E21 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 31132E9A2F15708800418E21 /* AppleiCode */;
+			targetProxy = 31132EA72F15708900418E21 /* PBXContainerItemProxy */;
+		};
 		31E559622F1503CA00757A8D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 31E559522F1503C800757A8D /* AppleiChat */;
@@ -269,6 +385,66 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		31132EAB2F15708900418E21 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = N2V5RLPP86;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AppleiCode/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = AppleiCode;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Denn.AppleiChat.AppleiCode;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		31132EAC2F15708900418E21 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = N2V5RLPP86;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AppleiCode/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = AppleiCode;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Denn.AppleiChat.AppleiCode;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 		31E559722F1503CA00757A8D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -536,6 +712,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		31132EAE2F15708900418E21 /* Build configuration list for PBXNativeTarget "AppleiCode" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				31132EAB2F15708900418E21 /* Debug */,
+				31132EAC2F15708900418E21 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		31E5594E2F1503C800757A8D /* Build configuration list for PBXProject "AppleiChat" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
