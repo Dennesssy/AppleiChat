@@ -18,6 +18,54 @@
 import Foundation
 import FoundationModels
 
+// MARK: - Tool Definitions
+
+struct FetchWebContent: Tool {
+    let name = "fetch_web_content"
+    let description = "Fetch and analyze web content from a URL"
+    let parameters = FetchWebContentParameters()
+
+    @Generable
+    struct Arguments {
+        @Guide(description: "The URL to fetch content from")
+        let url: String
+    }
+
+    func call(arguments: Arguments) async throws -> String {
+        let swiftfejsPath = "/Users/denn/ML/Projecti/SwiftFejs/swiftfejs"
+
+        guard FileManager.default.fileExists(atPath: swiftfejsPath) else {
+            return "Error: SwiftFejs not found at \(swiftfejsPath)"
+        }
+
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: swiftfejsPath)
+        process.arguments = [arguments.url, "--mode", "text", "--timeout", "15"]
+
+        let pipe = Pipe()
+        process.standardOutput = pipe
+        process.standardError = Pipe()
+
+        do {
+            try process.run()
+            process.waitUntilExit()
+
+            let data = pipe.fileHandleForReading.readDataToEndOfFile()
+            if let content = String(data: data, encoding: .utf8) {
+                return content
+            }
+        } catch {
+            return "Error fetching URL: \(error.localizedDescription)"
+        }
+
+        return "Error: Failed to fetch content"
+    }
+}
+
+struct FetchWebContentParameters: Encodable {
+    // Empty parameters struct - schema is inferred from Arguments
+}
+
 // MARK: - Configuration
 
 struct CLIConfig {
@@ -53,7 +101,6 @@ class AppleiCLI {
     private var model: SystemLanguageModel
     private var config: CLIConfig
     private var messageCount: Int = 0
-    private var recentMessages: [(role: String, content: String)] = []  // Keep last 10 messages
 
     init(config: CLIConfig) {
         self.config = config
@@ -66,9 +113,10 @@ class AppleiCLI {
 
         switch availability {
         case .available:
+            let fetchTool = FetchWebContent()
             session = LanguageModelSession(
                 model: model,
-                tools: [],
+                tools: [fetchTool],
                 instructions: config.systemInstructions
             )
             // Prewarm session to reduce latency
@@ -102,11 +150,9 @@ class AppleiCLI {
             return
         }
 
-        // Store user message in memory
-        storeMessage(role: "user", content: prompt)
-
         do {
             let options = GenerationOptions(temperature: config.temperature)
+            // streamResponse automatically maintains conversation history in the session
             let stream = session.streamResponse(to: prompt, options: options)
 
             var fullResponse = ""
@@ -125,10 +171,6 @@ class AppleiCLI {
             }
 
             print("\n")
-            messageCount += 2 // User + Assistant
-
-            // Store assistant response in memory
-            storeMessage(role: "assistant", content: fullResponse)
 
         } catch let error as LanguageModelSession.GenerationError {
             handleGenerationError(error)
@@ -137,36 +179,10 @@ class AppleiCLI {
         }
     }
 
-    // Store messages in memory (keep last 10 for context)
-    private func storeMessage(role: String, content: String) {
-        recentMessages.append((role: role, content: content))
-        // Keep only last 10 messages
-        if recentMessages.count > 10 {
-            recentMessages.removeFirst()
-        }
-    }
-
-    // Get conversation context (last 5 exchanges)
-    func getRecentContext() -> String {
-        guard !recentMessages.isEmpty else { return "" }
-        let last5 = Array(recentMessages.suffix(10))
-        return last5.map { "\($0.role): \($0.content)" }.joined(separator: "\n")
-    }
-
-    // Print current context for debugging
-    func printContext() {
-        printInfo("Recent conversation context (\(recentMessages.count) messages):")
-        for (index, msg) in recentMessages.enumerated() {
-            print("  \(index + 1). \(msg.role): \(msg.content.prefix(50))...")
-        }
-    }
-
     // Interactive mode
     func interactive() async {
         printInfo("Applei CLI - Interactive Mode")
-        printInfo("Press Ctrl+C to exit or type 'exit'/'quit'")
-        printInfo("Type 'clear' to reset conversation")
-        printInfo("Type 'help' for commands\n")
+        printInfo("Press Ctrl+C to exit or type 'exit'/'quit'\n")
 
         // Handle Ctrl+C gracefully
         signal(SIGINT) { _ in
@@ -187,106 +203,17 @@ class AppleiCLI {
                 continue
             }
 
-            // Handle commands
-            let parts = input.split(separator: " ", maxSplits: 1, omittingEmptySubsequences: true)
-            let command = parts.first.map(String.init).map { $0.lowercased() } ?? ""
-            let argument = parts.count > 1 ? String(parts[1]) : ""
-
-            switch command {
-            case "exit", "quit":
+            // Check for exit command
+            let command = input.lowercased()
+            if command == "exit" || command == "quit" {
                 printInfo("Goodbye!")
                 return
-            case "clear":
-                clearSession()
-                printInfo("Conversation cleared")
-                continue
-            case "help":
-                printHelp()
-                continue
-            case "status":
-                printStatus()
-                continue
-            case "context":
-                printContext()
-                continue
-            case "fetch":
-                if argument.isEmpty {
-                    printWarning("Usage: fetch <url>")
-                    continue
-                }
-                printInfo("Fetching \(argument)...")
-                if let content = fetchWebContent(argument) {
-                    let preview = String(content.prefix(200))
-                    printInfo("Fetched \(content.count) characters")
-                    let analysisPrompt = "Please analyze this web content and provide a summary:\n\n\(content)"
-                    await query(analysisPrompt)
-                }
-                continue
-            default:
-                break
             }
 
             await query(input)
         }
     }
 
-    private func clearSession() {
-        messageCount = 0
-        initializeSession()
-    }
-
-    private func printStatus() {
-        printInfo("Model: \(config.modelUseCase)")
-        printInfo("Temperature: \(config.temperature)")
-        printInfo("Message count: \(messageCount)")
-        printInfo("Session active: \(session != nil)")
-    }
-
-    private func printHelp() {
-        print("""
-
-        Available Commands:
-          help              - Show this help message
-          status            - Show current session status
-          clear             - Clear conversation history
-          fetch <url>       - Fetch and analyze web content
-          exit/quit         - Exit interactive mode
-
-        """)
-    }
-
-    // MARK: - Web Content Fetching (SwiftFejs Integration)
-
-    func fetchWebContent(_ urlString: String) -> String? {
-        let swiftfejsPath = "/Users/denn/ML/Projecti/SwiftFejs/swiftfejs"
-
-        guard FileManager.default.fileExists(atPath: swiftfejsPath) else {
-            printWarning("SwiftFejs not found at \(swiftfejsPath)")
-            return nil
-        }
-
-        let process = Process()
-        process.executableURL = URL(fileURLWithPath: swiftfejsPath)
-        process.arguments = [urlString, "--mode", "text", "--timeout", "15"]
-
-        let pipe = Pipe()
-        process.standardOutput = pipe
-        process.standardError = Pipe()
-
-        do {
-            try process.run()
-            process.waitUntilExit()
-
-            let data = pipe.fileHandleForReading.readDataToEndOfFile()
-            if let content = String(data: data, encoding: .utf8) {
-                return content
-            }
-        } catch {
-            printError("Failed to fetch URL: \(error.localizedDescription)")
-        }
-
-        return nil
-    }
 
 
     private func handleGenerationError(_ error: LanguageModelSession.GenerationError) {
@@ -345,6 +272,39 @@ class AppleiCLI {
 
         let condensedTranscript = Transcript(entries: condensedEntries)
         return LanguageModelSession(transcript: condensedTranscript)
+    }
+
+    // MARK: - Web Content Fetching
+
+    func fetchWebContent(_ urlString: String) -> String? {
+        let swiftfejsPath = "/Users/denn/ML/Projecti/SwiftFejs/swiftfejs"
+
+        guard FileManager.default.fileExists(atPath: swiftfejsPath) else {
+            printWarning("SwiftFejs not found at \(swiftfejsPath)")
+            return nil
+        }
+
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: swiftfejsPath)
+        process.arguments = [urlString, "--mode", "text", "--timeout", "15"]
+
+        let pipe = Pipe()
+        process.standardOutput = pipe
+        process.standardError = Pipe()
+
+        do {
+            try process.run()
+            process.waitUntilExit()
+
+            let data = pipe.fileHandleForReading.readDataToEndOfFile()
+            if let content = String(data: data, encoding: .utf8) {
+                return content
+            }
+        } catch {
+            printError("Failed to fetch URL: \(error.localizedDescription)")
+        }
+
+        return nil
     }
 
     // MARK: - Utility Functions
@@ -450,7 +410,6 @@ struct ArgumentParser {
           applei-cli [options] "prompt"           Single query mode
           applei-cli --interactive                Interactive mode
           applei-cli --fetch-url <url> "analyze"  Fetch and analyze web content
-          applei-cli --ask-gemini "question"      Ask Gemini a question
 
         Options:
           -i, --interactive              Start interactive mode
@@ -464,18 +423,6 @@ struct ArgumentParser {
           applei-cli "What is Swift?"
           applei-cli --fetch-url "https://example.com" "summarize this"
           applei-cli --interactive
-
-        Interactive Mode Commands:
-          fetch <url>                    Fetch and analyze web content
-          context                        Show recent conversation context
-          clear                          Reset conversation
-          status                         Show session info
-          help                           Show available commands
-          exit/quit                      Exit
-
-        Integration Features:
-          - SwiftFejs: Fetch and analyze web content (via --fetch-url or fetch command)
-          - FoundationModels: Apple Intelligence on-device LLM
 
         Note: Requires macOS 15.1+ and Apple Intelligence enabled
 
