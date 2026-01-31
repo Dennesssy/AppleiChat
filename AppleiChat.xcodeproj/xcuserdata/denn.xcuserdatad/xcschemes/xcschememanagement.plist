@@ -7,7 +7,25 @@
 		<key>AppleiChat.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
+		<key>AppleiCode.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
 			<integer>0</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>31132E9A2F15708800418E21</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>31E559522F1503C800757A8D</key>
+		<dict>
+			<key>primary</key>
+			<true/>
 		</dict>
 	</dict>
 </dict>

@@ -5,7 +5,15 @@
       "Bash(defaults find AppleIntelligence)",
       "Bash(plutil:*)",
       "Bash(ls:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(xcodebuild:*)",
+      "Bash(swiftc:*)",
+      "WebSearch",
+      "Bash(git commit:*)",
+      "Bash(gh repo create:*)",
+      "Bash(gh repo view:*)",
+      "Bash(git remote add:*)",
+      "Bash(git fetch:*)"
     ]
   }
 }
