@@ -1,0 +1,14 @@
+# Build artifacts
+Applei-CLI/.build/
+Applei-CLI/applei-cli
+*.o
+*.swiftmodule
+
+# Xcode
+*.xcuserstate
+*.xcuserdatad/
+DerivedData/
+.DS_Store
+
+# Task state
+Documents/AppleiChat/task_state.json
